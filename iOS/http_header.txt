@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 10 Dec 2015 14:00:16 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+X-AREQUESTID: 900x61655x1
+X-ASEN: SEN-2427011
+X-Seraph-LoginReason: OUT
+X-Seraph-LoginReason: OK
+X-ASESSIONID: lgezvb
+X-AUSERNAME: elias.will
+X-ATENANT-ID: kupferwerk.atlassian.net
+Cache-Control: no-cache, no-store, no-transform
+X-Content-Type-Options: nosniff
+Set-Cookie: JSESSIONID=7B10E8914B0CE88337A6F4B855E18CCD; Path=/; Secure; HttpOnly
+Set-Cookie: studio.crowd.tokenkey=""; Domain=.kupferwerk.atlassian.net; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly
+Set-Cookie: studio.crowd.tokenkey=gMJDT1eLu1g0I0PBEa4iaQ00; Domain=.kupferwerk.atlassian.net; Path=/; Secure; HttpOnly
+Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|12e2cf23d6f657d40e1125122af814a8e97ee75c|lin; Path=/; Secure
+Strict-Transport-Security: max-age=315360000;includeSubDomains
+
+{"expand":"names,schema","startAt":0,"maxResults":50,"total":1,"issues":[{"expand":"operations,versionedRepresentations,editmeta,changelog,transitions,renderedFields","id":"33843","self":"https://kupferwerk.atlassian.net/rest/api/latest/issue/33843","key":"TSAM-13"}]}

@@ -1,0 +1,14 @@
+{
+    "expand": "names,schema",
+    "issues": [
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,transitions,renderedFields",
+            "id": "33844",
+            "key": "TSAM-14",
+            "self": "https://kupferwerk.atlassian.net/rest/api/latest/issue/33844"
+        }
+    ],
+    "maxResults": 50,
+    "startAt": 0,
+    "total": 1
+}

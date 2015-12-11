@@ -1,0 +1,2 @@
+# Logfile created on 2015-12-10 15:03:02 +0100 by logger.rb/47272
+I, [2015-12-10 15:03:02#6137]  INFO -- : Created json-file 1_Laptop_hash.json

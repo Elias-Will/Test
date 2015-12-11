@@ -1,0 +1,5 @@
+# Logfile created on 2015-12-10 14:50:13 +0100 by logger.rb/47272
+I, [2015-12-10 14:50:13#5443]  INFO -- : Created json-file 1_Android Phone_hash.json
+I, [2015-12-10 14:50:56#5525]  INFO -- : Created json-file 1_Android Phone_hash.json
+I, [2015-12-10 14:53:00#5608]  INFO -- : Created json-file 1_Android Phone_hash.json
+I, [2015-12-10 14:59:00#5701]  INFO -- : Created json-file 1_Android Phone_hash.json

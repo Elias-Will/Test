@@ -58,8 +58,6 @@ else
 	$r_csv_m += "-a "
 	`ruby readCSV.rb #{$r_csv_m}`
 
-
-
 	puts "### Searing Jira Issue ###"
 	$address = $protocol + $host + $file + "/search"
 	$s_jira_m += "-u #{$user} "
@@ -71,8 +69,11 @@ else
 	#$s_jira_m += $stdin.gets.chomp
 	`ruby searchJiraOSX.rb #{$s_jira_m}`
 
+	
+
 	if Dir.glob("*_create.json").any?
 		puts "### Creating Jira Issue ###"
+		#$stdin.gets
 		$address = $protocol + $host + $file + "/issue"
 		$c_jira_m += "-u #{$user} "
 		$c_jira_m += "-a #{$address} "
@@ -85,6 +86,7 @@ else
 
 	if Dir.glob("*_update.json").any?
 		puts "### Checking whether updates are needed ###"
+		#$stdin.gets
 		$c_jira_m += "-u #{$user} "
 		`ruby osx_update.rb #{$c_jira_m}`
 	end

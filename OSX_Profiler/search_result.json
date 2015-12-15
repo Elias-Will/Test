@@ -3,9 +3,9 @@
     "issues": [
         {
             "expand": "operations,versionedRepresentations,editmeta,changelog,transitions,renderedFields",
-            "id": "33849",
-            "key": "TSAM-15",
-            "self": "https://kupferwerk.atlassian.net/rest/api/latest/issue/33849"
+            "id": "34117",
+            "key": "TSAM-18",
+            "self": "https://kupferwerk.atlassian.net/rest/api/latest/issue/34117"
         }
     ],
     "maxResults": 50,

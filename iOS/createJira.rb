@@ -24,7 +24,7 @@ end
 
 def curlCreateIssue(data)
 	puts `curl -D- -u #{$user} -X POST --data '#{data}' -H \
-			"Content-Type: application/json" #{$address}`
+			"Content-Type: application/json" #{$address} > create_log.txt`
 end
 
 

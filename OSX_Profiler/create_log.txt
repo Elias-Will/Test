@@ -1,23 +1,22 @@
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Server: nginx
-Date: Thu, 10 Dec 2015 13:59:03 GMT
+Date: Mon, 14 Dec 2015 14:31:06 GMT
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
-Vary: Accept-Encoding
-X-AREQUESTID: 899x61598x1
+X-AREQUESTID: 931x26794x1
 X-ASEN: SEN-2427011
 X-Seraph-LoginReason: OUT
 X-Seraph-LoginReason: OK
-X-ASESSIONID: 1orujp9
+X-ASESSIONID: 1d4yg9m
 X-AUSERNAME: elias.will
 X-ATENANT-ID: kupferwerk.atlassian.net
 Cache-Control: no-cache, no-store, no-transform
 X-Content-Type-Options: nosniff
-Set-Cookie: JSESSIONID=4AF4769F17AE8EA050D41CD8FCCF0F1C; Path=/; Secure; HttpOnly
+Set-Cookie: JSESSIONID=E026FF0803565353DBF928C4BC291B7F; Path=/; Secure; HttpOnly
 Set-Cookie: studio.crowd.tokenkey=""; Domain=.kupferwerk.atlassian.net; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly
 Set-Cookie: studio.crowd.tokenkey=gMJDT1eLu1g0I0PBEa4iaQ00; Domain=.kupferwerk.atlassian.net; Path=/; Secure; HttpOnly
-Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|dc7378532d9e6db7b0ba3ab787b0c2bc10454877|lin; Path=/; Secure
+Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|363857ea5f9b1b6dd1c3edd4cdb6994d461a906c|lin; Path=/; Secure
 Strict-Transport-Security: max-age=315360000;includeSubDomains
 
-{"expand":"names,schema","startAt":0,"maxResults":50,"total":1,"issues":[{"expand":"operations,versionedRepresentations,editmeta,changelog,transitions,renderedFields","id":"33844","self":"https://kupferwerk.atlassian.net/rest/api/latest/issue/33844","key":"TSAM-14"}]}
+{"id":"34117","key":"TSAM-18","self":"https://kupferwerk.atlassian.net/rest/api/latest/issue/34117"}

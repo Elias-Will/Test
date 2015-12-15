@@ -3,8 +3,9 @@
 WORKDIR=$(dirname $0)
 
 cd $WORKDIR
-ruby osx_wrapper.rb -u elias.will:Kappa123k -k
+ruby osx_wrapper.rb -k
 
-echo "done!"
+echo “#####################################”
+echo “You can safely close this window now.”
 
 exit

@@ -1,5 +1,6 @@
 require 'json'
 require 'optparse'
+require '../hash_formatter'
 
 def getUser()
 	puts "Enter username:password"
@@ -75,6 +76,7 @@ def checkMatch()
 		return true
 	elsif data["total"] > 1
 		puts "Found more than 1 matching Issues"
+		return true
 	end
 end
 
@@ -102,7 +104,7 @@ def createPostHash(csv_hash, count)
 				"customfield_11022" => csv_hash["CPU Model"],
 				"customfield_11023" => csv_hash["CPU Speed"].to_f,
 				"customfield_11060" => csv_hash["Display Resolution"],
-				"customfield_11044" => csv_hash["Firewire Ports"].to_f, #new
+				#{}"customfield_11044" => csv_hash["Firewire Ports"], #new
 				"customfield_11057" => csv_hash["Graphics Card 1"], #new
 				"customfield_11058" => csv_hash["Graphics Card 2"], #new
 				
@@ -123,53 +125,10 @@ def createPostHash(csv_hash, count)
 				"customfield_11059" => csv_hash["VRAM"].to_f #new
 			}
 		}
-		if new_hash["fields"]["customfield_11061"] == 0.0
-			new_hash["fields"].delete("customfield_11061")
-		end
-		if new_hash["fields"]["customfield_11027"] == 0.0
-			new_hash["fields"].delete("customfield_11027")
-		end
-		if new_hash["fields"]["customfield_11023"] == 0.0
-			new_hash["fields"].delete("customfield_11023")
-		end
-		if new_hash["fields"]["customfield_11029"] == 0.0
-			new_hash["fields"].delete("customfield_11029")
-		end	
-		if new_hash["fields"]["customfield_11044"] == 0.0
-			new_hash["fields"].delete("customfield_11044")
-		end
-		if new_hash["fields"]["customfield_11038"] == 0.0
-			new_hash["fields"].delete("customfield_11038")
-		end
-		if new_hash["fields"]["customfield_11042"] == 0.0
-			new_hash["fields"].delete("customfield_11042")
-		end
-		if new_hash["fields"]["customfield_11059"] == 0.0
-			new_hash["fields"].delete("customfield_11059")
-		end
-		if new_hash["fields"]["customfield_11003"]["value"] == nil
-			new_hash["fields"].delete("customfield_11003")
-		end
-		if new_hash["fields"]["customfield_11018"]["value"] == nil
-			new_hash["fields"].delete("customfield_11018")
-		end
-		if new_hash["fields"]["customfield_11040"]["value"] == nil
-			new_hash["fields"].delete("customfield_11040")
-		end
-		if new_hash["fields"]["customfield_11037"]["value"] == nil
-			new_hash["fields"].delete("customfield_11037")
-		end
 
-
-
-
-		
-		new_hash = JSON.pretty_generate(new_hash)		
-		new_hash = new_hash.gsub(/\n/, "")
-		new_hash = new_hash.gsub(/:\s+/, ":")
-		new_hash = new_hash.gsub(/\{\s+/, "{")
-		new_hash = new_hash.gsub(/\s+}/, "}")
-		new_hash = new_hash.gsub(/,\s+/, ",")
+		new_hash = HashFormatter.delete_blanks(new_hash)
+		new_hash = JSON.pretty_generate(new_hash)
+		new_hash = HashFormatter.remove_spaces(new_hash)
 		hash_file = File.open(count.to_s + "_create.json", "w")
 		hash_file.write(new_hash)
 		hash_file.close

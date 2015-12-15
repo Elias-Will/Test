@@ -3,8 +3,9 @@
 WORKDIR=$(dirname $0)
 
 cd $WORKDIR
-ruby android_wrapper.rb -k -u elias.will:Kappa123k
+ruby android_wrapper.rb
 
-echo "done!"
+echo “#####################################”
+echo “You can safely close this window now.”
 
 exit

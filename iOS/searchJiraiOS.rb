@@ -1,5 +1,6 @@
 require 'json'
 require 'optparse'
+require '../hash_formatter'
 
 def getUser()
 	puts "Enter username:password"
@@ -129,39 +130,10 @@ def createPostHash(csv_hash, count)
 			}
 		}
 
-		if new_hash["fields"]["customfield_11203"] == 0.0
-			new_hash["fields"].delete("customfield_11203")
-		end
-		if new_hash["fields"]["customfield_11027"] == 0.0
-			new_hash["fields"].delete("customfield_11027")
-		end
-		if new_hash["fields"]["customfield_11207"] == 0.0
-			new_hash["fields"].delete("customfield_11207")
-		end
-		if new_hash["fields"]["customfield_11212"] == 0.0
-			new_hash["fields"].delete("customfield_11212")
-		end
-		if new_hash["fields"]["customfield_11208"] == 0.0
-			new_hash["fields"].delete("customfield_11208")
-		end
-		if new_hash["fields"]["customfield_11021"] == 0.0
-			new_hash["fields"].delete("customfield_11021")
-		end
-		if new_hash["fields"]["customfield_11061"] == 0.0
-			new_hash["fields"].delete("customfield_11061")
-		end
-		if new_hash["fields"]["customfield_11100"] == 0.0
-			new_hash["fields"].delete("customfield_11100")
-		end
-		if new_hash["fields"]["customfield_11023"] == 0.0
-			new_hash["fields"].delete("customfield_11023")
-		end
-		new_hash = JSON.pretty_generate(new_hash)		
-		new_hash = new_hash.gsub(/\n/, "")
-		new_hash = new_hash.gsub(/:\s+/, ":")
-		new_hash = new_hash.gsub(/\{\s+/, "{")
-		new_hash = new_hash.gsub(/\s+}/, "}")
-		new_hash = new_hash.gsub(/,\s+/, ",")	
+		new_hash = HashFormatter.delete_blanks(new_hash)
+		new_hash = JSON.pretty_generate(new_hash)
+		new_hash = HashFormatter.remove_spaces(new_hash)
+
 		hash_file = File.open(count.to_s + "_create.json", "w")
 		hash_file.write(new_hash)
 		hash_file.close

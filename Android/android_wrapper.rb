@@ -113,5 +113,3 @@ if ! $keep_files
 		`rm log.txt`
 	end
 end
-
-$stdin.gets

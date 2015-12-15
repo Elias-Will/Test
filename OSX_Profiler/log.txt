@@ -1,2 +1,8 @@
-# Logfile created on 2015-12-10 15:03:02 +0100 by logger.rb/47272
-I, [2015-12-10 15:03:02#6137]  INFO -- : Created json-file 1_Laptop_hash.json
+# Logfile created on 2015-12-15 09:00:23 +0100 by logger.rb/47272
+I, [2015-12-15 09:00:23#982]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:01:54#1073]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:02:27#1157]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:04:35#1243]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:06:41#1329]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:25:03#1608]  INFO -- : Created json-file 1_Laptop_hash.json
+I, [2015-12-15 09:27:05#1699]  INFO -- : Created json-file 1_Laptop_hash.json

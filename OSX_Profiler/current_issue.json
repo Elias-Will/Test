@@ -17,7 +17,7 @@
             "total": 0
         },
         "components": [],
-        "created": "2015-12-10T12:45:25.140+0100",
+        "created": "2015-12-14T15:31:06.364+0100",
         "creator": {
             "active": true,
             "avatarUrls": {
@@ -50,7 +50,7 @@
         "customfield_10100": null,
         "customfield_10200": null,
         "customfield_10400": null,
-        "customfield_10500": "1|i00uhr:",
+        "customfield_10500": "1|i00vw7:",
         "customfield_10600": null,
         "customfield_10700": null,
         "customfield_10800": null,
@@ -74,7 +74,7 @@
         "customfield_10917": null,
         "customfield_11000": null,
         "customfield_11001": null,
-        "customfield_11002": "VM81834W0KM",
+        "customfield_11002": "VM81834W0K",
         "customfield_11003": {
             "id": "10600",
             "self": "https://kupferwerk.atlassian.net/rest/api/2/customFieldOption/10600",
@@ -124,7 +124,11 @@
         "customfield_11037": null,
         "customfield_11038": null,
         "customfield_11039": null,
-        "customfield_11040": null,
+        "customfield_11040": {
+            "id": "10677",
+            "self": "https://kupferwerk.atlassian.net/rest/api/2/customFieldOption/10677",
+            "value": "Up to 10 Gb/s x2"
+        },
         "customfield_11041": null,
         "customfield_11042": null,
         "customfield_11043": null,
@@ -138,12 +142,12 @@
         "customfield_11051": null,
         "customfield_11052": null,
         "customfield_11053": null,
-        "customfield_11054": null,
+        "customfield_11054": "00:1f:5b:c3:3b:38",
         "customfield_11055": null,
         "customfield_11056": "00:1E:C2:99:60:B9",
-        "customfield_11057": null,
-        "customfield_11058": null,
-        "customfield_11059": null,
+        "customfield_11057": "NVIDIA GeForce 8800 GS",
+        "customfield_11058": "NVIDIA GeForce 8800 GS",
+        "customfield_11059": 1024.0,
         "customfield_11060": "1920x1200",
         "customfield_11061": null,
         "customfield_11100": null,
@@ -227,7 +231,7 @@
             "subtask": false
         },
         "labels": [],
-        "lastViewed": "2015-12-10T14:43:57.918+0100",
+        "lastViewed": "2015-12-15T09:25:35.516+0100",
         "priority": {
             "iconUrl": "https://kupferwerk.atlassian.net/images/icons/priorities/major.svg",
             "id": "3",
@@ -286,16 +290,16 @@
         "timeoriginalestimate": null,
         "timespent": null,
         "timetracking": {},
-        "updated": "2015-12-10T12:54:33.825+0100",
+        "updated": "2015-12-15T09:25:09.871+0100",
         "versions": [],
         "votes": {
             "hasVoted": false,
-            "self": "https://kupferwerk.atlassian.net/rest/api/2/issue/TSAM-15/votes",
+            "self": "https://kupferwerk.atlassian.net/rest/api/2/issue/TSAM-18/votes",
             "votes": 0
         },
         "watches": {
             "isWatching": true,
-            "self": "https://kupferwerk.atlassian.net/rest/api/2/issue/TSAM-15/watchers",
+            "self": "https://kupferwerk.atlassian.net/rest/api/2/issue/TSAM-18/watchers",
             "watchCount": 1
         },
         "worklog": {
@@ -306,8 +310,8 @@
         },
         "workratio": -1
     },
-    "id": "33849",
-    "key": "TSAM-15",
+    "id": "34117",
+    "key": "TSAM-18",
     "renderedFields": {
         "aggregateprogress": null,
         "aggregatetimeestimate": null,
@@ -322,7 +326,7 @@
             "total": 0
         },
         "components": null,
-        "created": "Today 12:45",
+        "created": "Yesterday 15:31",
         "creator": null,
         "customfield_10000": null,
         "customfield_10001": null,
@@ -366,7 +370,7 @@
         "customfield_10917": "",
         "customfield_11000": "",
         "customfield_11001": "",
-        "customfield_11002": "VM81834W0KM",
+        "customfield_11002": "VM81834W0K",
         "customfield_11003": null,
         "customfield_11004": "iMac8.1",
         "customfield_11005": null,
@@ -418,11 +422,11 @@
         "customfield_11051": "",
         "customfield_11052": "",
         "customfield_11053": "",
-        "customfield_11054": "",
+        "customfield_11054": "00:1f:5b:c3:3b:38",
         "customfield_11055": "",
         "customfield_11056": "00:1E:C2:99:60:B9",
-        "customfield_11057": "",
-        "customfield_11058": "",
+        "customfield_11057": "NVIDIA GeForce 8800 GS",
+        "customfield_11058": "NVIDIA GeForce 8800 GS",
         "customfield_11059": null,
         "customfield_11060": "1920x1200",
         "customfield_11061": null,
@@ -495,7 +499,7 @@
         "issuelinks": null,
         "issuetype": null,
         "labels": null,
-        "lastViewed": "Today 14:43",
+        "lastViewed": "Today 9:25",
         "priority": null,
         "progress": null,
         "project": null,
@@ -509,7 +513,7 @@
         "timeoriginalestimate": null,
         "timespent": null,
         "timetracking": {},
-        "updated": "Today 12:54",
+        "updated": "Today 9:25",
         "versions": null,
         "votes": null,
         "watches": null,
@@ -521,5 +525,5 @@
         },
         "workratio": null
     },
-    "self": "https://kupferwerk.atlassian.net/rest/api/latest/issue/33849"
+    "self": "https://kupferwerk.atlassian.net/rest/api/latest/issue/34117"
 }

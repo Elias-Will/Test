@@ -69,6 +69,32 @@ module CompareHashes
 		end
 	end
 
+	### 	Translates the key from new_hash to the matching customfield_type
+	def self.getType(key)
+		case key
+			when "OS" 							then return "Option"
+			when "OS Version"					then return "String"
+			when "CPU Model"					then return "String"
+			when "CPU Speed"					then return "Number"
+			when "RAM"							then return "String"
+			when "CPU Cores"					then return "Number"
+			when "Internal Storage Capacity" 	then return "Number"
+			when "USB Type"						then return "Option"
+			when "Number of Thunderbolt Ports" 	then return "Number"
+			when "Thunderbolt Type" 			then return "Option"
+			when "Power Supply (Energy)"		then return "Number"
+			when "Firewire Ports"				then return "String"
+			when "Graphics Card 1"				then return "String"
+			when "Graphics Card 2"				then return "String"
+			when "VRAM"							then return "Number"
+			when "Battery Capacity"				then return "Number"
+			when "Bluetooth Version"			then return "Number"
+			when "SDK Version"					then return "String"
+			when "Touch ID"						then return "String"
+			else return false
+		end
+	end
+
 
 	### 	Compares a hash (new_hash), created from new hardware data
 	### 	to the latest Jira Issue (current_hash). If the values of
@@ -84,14 +110,14 @@ module CompareHashes
 			next if _ID == false #some values can't change (eg MAC Address) and
 				#are not included in the getID function
 
-			if current_hash["fields"][_ID].respond_to?(:key?) #if true, means
-					#the current field is an option-type with a nested hash
+			if current_hash["fields"][_ID].respond_to?(:key?) || getType(key) == "Option" #if true, means
+												#the current field is an option-type with a nested hash
 				if value != current_hash["fields"][_ID]["value"]
 					update_hash["fields"].store(_ID, {})
 					update_hash["fields"][_ID].store("value", value)
 				end
 			else				
-				value = value.to_f if current_hash["fields"][_ID].is_a?(Float)
+				value = value.to_f if current_hash["fields"][_ID].is_a?(Float) || getType(key) == "Number"
 				if value != current_hash["fields"][_ID]
 					update_hash["fields"].store(_ID, value)
 				end				
@@ -102,7 +128,8 @@ module CompareHashes
 		#some safety.
 		return nil if update_hash["fields"].empty?
 		return update_hash
-	end
+	end 	# can't get type of empty cells. updating null-values that are supposed to be
+			# numbers (or options?) not yet possible!
 end
 
 
@@ -166,7 +193,4 @@ end
 			else return false
 		end
 	end
-
-
-
 =end

@@ -1,6 +1,7 @@
 require 'json'
 require 'optparse'
 require '../hash_formatter'
+require '../curl_commands'
 
 def getUser()
 	puts "Enter username:password"
@@ -9,42 +10,27 @@ def getUser()
 	return $user
 end
 
-def defaultAddress()
-	def_protocol = "https://"
-	def_host = "kupferwerk.atlassian.net"
-	def_file = "/rest/api/latest"
-	def_mode = "/search"
-	return def_protocol + def_host + def_file + def_mode
-end
+# def defaultAddress()
+# 	def_protocol = "https://"
+# 	def_host = "kupferwerk.atlassian.net"
+# 	def_file = "/rest/api/latest"
+# 	def_mode = "/search"
+# 	return def_protocol + def_host + def_file + def_mode
+# end
 
 $jira_project = nil
-$address = defaultAddress()
 $user = nil
-$output_file_h = "http_header.txt"
-$output_file = "search_result.json"
 
 op = OptionParser.new do |opts|
-	#opts.banner = ""
-	#opts.on('-p')
-	#opts.on('-H')
-	#opts.on('-m')
-	#opts.on('', '--OUT_H')
-	#opts.on('', '--OUT')
-	opts.on('-a', '--address ad', 'curl Address') {|ad| $address = ad}
+	#opts.on('-a', '--address ad', 'curl Address') {|ad| $address = ad}
 	opts.on('-u', '--user user', 'Username & Password') {|user| $user = user}
-	opts.on('-P', '--project pr', 'Jira Project') {|pr| $jira_project = pr}
+	#opts.on('-P', '--project pr', 'Jira Project') {|pr| $jira_project = pr}
 	opts.on('-h', '--help', 'Display Help') do
 		puts opts
 		exit
 	end
 end
 op.parse!
-
-def curlSearch_Header(matching_mode, matching_value)
-	puts `curl -D- -u #{$user} -X POST -H "Content-Type: application/json" --data \
-			'{"jql":"project = #{$jira_project} AND \\\"#{matching_mode}\\\" ~ #{matching_value}","fields":["key"]}' \
-			\"#{$address}\" > #{$output_file_h}`
-end
 
 def checkHeader()
 	file = File.read($output_file_h)
@@ -60,14 +46,8 @@ def checkHeader()
 	return false
 end
 
-def curlSearch(matching_mode, matching_value)
-	puts `curl -u #{$user} -X POST -H "Content-Type: application/json" --data \
-			'{"jql":"project = #{$jira_project} AND \\\"#{matching_mode}\\\" ~ #{matching_value}","fields":["key"]}' \
-			\"#{$address}\" | python -m json.tool > #{$output_file}`
-end
-
 def checkMatch()
-	file = File.read($output_file)
+	file = File.read($output_file_search)
 	data = JSON.parse(file)
 
 	if data["total"] == 0
@@ -80,7 +60,7 @@ def checkMatch()
 end
 
 def getKey()
-	file = File.read($output_file)
+	file = File.read($output_file_search)
 	data = JSON.parse(file)
 	return data["issues"][0]["key"]
 end
@@ -166,9 +146,9 @@ def main()
 
 		$jira_project = hash_file["Project Name"]
 		if hash_file.has_key?("Serial Number") && hash_file["Serial Number"] != nil
-			curlSearch_Header("Serial Number", asset_serial)
+			CurlCommands.curlSearch_Header($user, $jira_project, "Serial Number", asset_serial)
 			if state = checkHeader()
-				curlSearch("Serial Number", asset_serial)
+				CurlCommands.curlSearch($user, $jira_project, "Serial Number", asset_serial)
 				found_serial = checkMatch()
 				if found_serial
 					key = getKey()
@@ -179,9 +159,9 @@ def main()
 		end
 
 		if hash_file.has_key?("IMEI") && hash_file["IMEI"] != nil
-			curlSearch_Header("IMEI", asset_imei)
+			CurlCommands.curlSearch_Header($user, $jira_project, "IMEI", asset_imei)
 			if state = checkHeader()
-				curlSearch("IMEI", asset_imei)
+				CurlCommands.curlSearch($user, $jira_project, "IMEI", asset_imei)
 				found_imei = checkMatch()
 				if found_imei
 					key = getKey()
@@ -198,11 +178,3 @@ def main()
 end
 
 main()
-
-=begin
-	
-HTTP/1.1 401 Unauthorized   wrong username/password
-HTTP/1.1 502 Bad Gateway	wrong url
-HTTP/1.1 200 OK				successful request
-
-=end

@@ -1,6 +1,7 @@
 require 'json'
 require 'optparse'
 require '../hash_formatter'
+require '../curl_commands'
 
 def getUser()
 	puts "Enter username:password"
@@ -9,42 +10,27 @@ def getUser()
 	return user
 end
 
-def defaultAddress()
-	def_protocol = "https://"
-	def_host = "kupferwerk.atlassian.net"
-	def_file = "/rest/api/latest"
-	def_mode = "/search"
-	return def_protocol + def_host + def_file + def_mode
-end
+# def defaultAddress()
+# 	def_protocol = "https://"
+# 	def_host = "kupferwerk.atlassian.net"
+# 	def_file = "/rest/api/latest"
+# 	def_mode = "/search"
+# 	return def_protocol + def_host + def_file + def_mode
+# end
 
 $jira_project = "TSAM"
-$address = defaultAddress()
 $user = nil
-$output_file_h = "http_header.txt"
-$output_file = "search_result.json"
 
 op = OptionParser.new do |opts|
-	#opts.banner = ""
-	#opts.on('-p')
-	#opts.on('-H')
-	#opts.on('-m')
-	#opts.on('', '--OUT_H')
-	#opts.on('', '--OUT')
-	opts.on('-a', '--address ad', 'curl Address') {|ad| $address = ad}
+	opts.banner = "### searchJiraOSX.rb options ###"	
+	#opts.on('-a', '--address ad', 'curl Address') {|ad| $address = ad}
 	opts.on('-u', '--user user', 'Username & Password') {|user| $user = user}
-	#opts.on('-P', '--project pr', 'Jira Project') {|pr| $jira_project = pr}
 	opts.on('-h', '--help', 'Display Help') do
 		puts opts
 		exit
 	end
 end
 op.parse!
-
-def curlSearch_Header(matching_mode, matching_value)
-	puts `curl -D- -u #{$user} -X POST -H "Content-Type: application/json" --data \
-			'{"jql":"project = #{$jira_project} AND \\\"#{matching_mode}\\\" ~ #{matching_value}","fields":["key"]}' \
-			\"#{$address}\" > #{$output_file_h}`
-end
 
 def checkHeader()
 	file = File.read($output_file_h)
@@ -60,14 +46,8 @@ def checkHeader()
 	return false
 end
 
-def curlSearch(matching_mode, matching_value)
-	puts `curl -u #{$user} -X POST -H "Content-Type: application/json" --data \
-			'{"jql":"project = #{$jira_project} AND \\\"#{matching_mode}\\\" ~ #{matching_value}","fields":["key"]}' \
-			\"#{$address}\" | python -m json.tool > #{$output_file}`
-end
-
 def checkMatch()
-	file = File.read($output_file)
+	file = File.read($output_file_search)
 	data = JSON.parse(file)
 
 	if data["total"] == 0
@@ -81,7 +61,7 @@ def checkMatch()
 end
 
 def getKey()
-	file = File.read($output_file)
+	file = File.read($output_file_search)
 	data = JSON.parse(file)
 	return data["issues"][0]["key"]
 end
@@ -104,25 +84,25 @@ def createPostHash(csv_hash, count)
 				"customfield_11022" => csv_hash["CPU Model"],
 				"customfield_11023" => csv_hash["CPU Speed"].to_f,
 				"customfield_11060" => csv_hash["Display Resolution"],
-				#{}"customfield_11044" => csv_hash["Firewire Ports"], #new
-				"customfield_11057" => csv_hash["Graphics Card 1"], #new
-				"customfield_11058" => csv_hash["Graphics Card 2"], #new
+				#{}"customfield_11044" => csv_hash["Firewire Ports"],
+				"customfield_11057" => csv_hash["Graphics Card 1"],
+				"customfield_11058" => csv_hash["Graphics Card 2"],
 				
 				"customfield_11029" => csv_hash["Internal Storage Capacity"].to_f,
 				"customfield_11056" => csv_hash["MAC Address (Bluetooth)"],
-				"customfield_11055" => csv_hash["MAC Address (Ethernet)"], #new
+				"customfield_11055" => csv_hash["MAC Address (Ethernet)"],
 				"customfield_11054" => csv_hash["MAC Address (WIFI)"],
 				"customfield_11004" => csv_hash["Model"],
-				"customfield_11038" => csv_hash["Number of Thunderbolt Ports"].to_f, #new
+				"customfield_11038" => csv_hash["Number of Thunderbolt Ports"].to_f,
 				"customfield_11019" => csv_hash["OS Version"],
-				"customfield_11042" => csv_hash["Power Supply (Energy)"].to_f, #new
+				"customfield_11042" => csv_hash["Power Supply (Energy)"].to_f,
 				"customfield_11024" => csv_hash["RAM"],
-				#RAM Speed
-				#RAM Upgradeable
+				"customfield_11025" => {"value" => csv_hash["RAM Upgradeable"]}, #new
+				"customfield_11026" => csv_hash["RAM Speed"], #new
 				"customfield_11002" => csv_hash["Serial Number"],
-				"customfield_11040" => {"value" => csv_hash["Thunderbolt Type"]}, #new
-				"customfield_11037" => {"value" => csv_hash["USB Type"]}, #new
-				"customfield_11059" => csv_hash["VRAM"].to_f #new
+				"customfield_11040" => {"value" => csv_hash["Thunderbolt Type"]},
+				"customfield_11037" => {"value" => csv_hash["USB Type"]},
+				"customfield_11059" => csv_hash["VRAM"].to_f
 			}
 		}
 
@@ -161,9 +141,9 @@ def main()
 
 		$jira_project = hash_file["Project Name"]
 		if hash_file.has_key?("Serial Number") && hash_file["Serial Number"] != nil
-			curlSearch_Header("Serial Number", asset_serial)
+			CurlCommands.curlSearch_Header($user, $jira_project, "Serial Number", asset_serial)
 			if state = checkHeader()
-				curlSearch("Serial Number", asset_serial)
+				CurlCommands.curlSearch($user, $jira_project, "Serial Number", asset_serial)
 				found_serial = checkMatch()
 				if found_serial
 					key = getKey()
@@ -173,9 +153,9 @@ def main()
 		end
 
 		if hash_file.has_key?("IMEI") && hash_file["IMEI"] != nil
-			curlSearch_Header("IMEI", asset_imei)
+			#curlSearch_Header("IMEI", asset_imei)
 			if state = checkHeader()
-				curlSearch("IMEI", asset_imei)
+				#curlSearch("IMEI", asset_imei)
 				found_imei = checkMatch()
 				if found_imei
 					key = getKey()
@@ -194,11 +174,3 @@ def main()
 end
 
 main()
-
-=begin
-	
-HTTP/1.1 401 Unauthorized   wrong username/password
-HTTP/1.1 502 Bad Gateway	wrong url
-HTTP/1.1 200 OK				successful request
-
-=end

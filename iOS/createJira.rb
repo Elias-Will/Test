@@ -1,7 +1,6 @@
 require 'json'
 require 'optparse'
-
-$address = "https://kupferwerk.atlassian.net/rest/api/latest/issue"
+require '../curl_commands'
 
 op = OptionParser.new do |opts|
 	#opts.banner = ""
@@ -32,5 +31,5 @@ files = "*_create.json"
 $user = getUser() unless $user != nil
 Dir[files].each do |f|
 	create_hash = File.read(f)
-	curlCreateIssue(create_hash)
+	CurlCommands.curlCreateIssue($user, create_hash)
 end

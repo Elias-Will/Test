@@ -1,6 +1,7 @@
 require 'json'
 require 'optparse'
 require '../hash_formatter'
+require '../curl_commands'
 
 $user = nil
 op = OptionParser.new do |opts|
@@ -19,14 +20,6 @@ def getUser()
 	return $user
 end
 
-def curlSingleIssue(key)
-	puts `curl -u #{$user} https://kupferwerk.atlassian.net/rest/api/latest/issue/#{key}?expand=renderedFields | python -m json.tool > ./current_issue.json`
-end
-
-def curlUpdateIssue(key, data)
-	puts `curl -D- -u #{$user} -X PUT --data "#{data}" -H "Content-Type: application/json" https://kupferwerk.atlassian.net/rest/api/latest/issue/#{key} > update_log.txt`
-end
-
 $user = getUser() unless $user != nil
 files = "*update.json"
 Dir[files].each do |f|
@@ -38,7 +31,7 @@ Dir[files].each do |f|
 	new_hash = JSON.parse(_file)
 
 	key = jira_location_hash["key"]
-	curlSingleIssue(key)
+	CurlCommands.curlSingleIssue($user, key)
 
 	curl_file = File.read("current_issue.json")
 	current_hash = JSON.parse(curl_file)
@@ -51,6 +44,6 @@ Dir[files].each do |f|
 	update_hash = HashFormatter.remove_spaces(update_hash)
 	update_hash = HashFormatter.add_escapes(update_hash)
 
-	curlUpdateIssue(key, update_hash)
+	CurlCommands.curlUpdateIssue($user, update_hash, key)
 end
 

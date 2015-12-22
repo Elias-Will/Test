@@ -1,8 +1,8 @@
 {
-  "IssueType": "Laptop",
+  "IssueType": "Android Phone",
   "Summary": "User is eliaswill @ KupferwerksiMac.rgb.kupferwerk.net (10.10.0.200)",
   "Project Name": "TSAM",
-  "manufacturer": "Apple",
+  "manufacturer": "LGE",
   "OS": "Mac OS X",
   "Battery Capacity": null,
   "CPU Cores": null,
@@ -10,8 +10,8 @@
   "CPU Speed": "3.06",
   "Display Resolution": "1920x1200",
   "Firewire Ports": null,
-  "Graphics Card 1": "NVIDIA GeForce 8800 GS",
-  "Graphics Card 2": "NVIDIA GeForce 8800 GS",
+  "Graphics Card 1": null,
+  "Graphics Card 2": null,
   "Internal Storage Capacity": null,
   "MAC Address (Bluetooth)": "00:1E:C2:99:60:B9",
   "MAC Address (Ethernet)": null,
@@ -23,9 +23,10 @@
   "RAM": "4",
   "RAM Speed": "800",
   "RAM Upgradeable": "Yes",
-  "Serial Number": "VM81834W0K",
+  "Serial Number": "ZX1D222LSR",
   "Storage Type": "Rotational",
   "Thunderbolt Type": "Up to 10 Gb/s x2",
   "USB Type": null,
-  "VRAM": "1024"
+  "VRAM": "1024",
+  "IMEI": "353321037899289"
 }

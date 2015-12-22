@@ -1,1 +1,0 @@
-{\"fields\":{\"customfield_11023\":3.06,\"customfield_11059\":1024.0}}

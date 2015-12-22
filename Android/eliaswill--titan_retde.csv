@@ -1,0 +1,2 @@
+IssueType,Summary,"Project Name",OS,"Battery Capacity","CPU Cores","CPU Model","CPU Speed","Device Name","Display Resolution","Display Size",DPI,IMEI,"MAC Address (Bluetooth)","MAC Address (WIFI)",Model,Manufacturer,"OS Version",RAM,"Serial Number","Bluetooth Version","Bluetooth Chipset","Front Camera","Rear Camera","SDK Version"
+"Android Phone","eliaswill ",AM,Android,0,4,"ARMv7 Processor rev 3 (v7l)",1.1904,titan_retde,"720 x 1280",,320,,"/system/bin/sh: cat: /efs/bluetooth/bt_addr: No such file or directory",80:6C:1B:DD:BD:F0,XT1068,motorola,5.0.2,,ZX1D222LSR,,,,,21

@@ -22,8 +22,6 @@ $log.datetime_format = '%F %H:%M:%S'
 
 
 def getFile()
-	#puts "---Files in Directory (use .csv)---", `ls | grep csv`, ""
-	#print "> "
 	file = $stdin.gets.chomp
 	if file == "*"
 		$log.info "File(s) used: " + Dir.glob("*.csv").to_s
@@ -52,11 +50,10 @@ def main()
 	!$csv_get_all ? files = getFile() : files = "*.csv"
 	$count = 0
 	Dir[files].each do |f|
-		#if :headers == true
 			CSV.foreach(f, headers: true) do |row|
 				$count += 1
 				asset_hash = row.to_hash
-				issuetype = asset_hash["IssueType"]
+				issuetype = "Android"#asset_hash["IssueType"]
 				asset_hash = JSON.pretty_generate(asset_hash)
 				
 				file_name = $count.to_s + "_" + issuetype + "_hash.json"
@@ -71,9 +68,6 @@ def main()
 					extrafile.close
 				end
 			end
-		#else
-		#	Kernel.abort("CSV File doesn't have a header!")
-		#end
 	end	
 end
 

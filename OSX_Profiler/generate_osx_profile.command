@@ -16,11 +16,11 @@ cd "$WORKDIR"
 ruby osx_profiler_for_kupferwerk_jira.rb -f
 
 cd "$WORKDIR"
-if [ -d "$OUTLOOK" ]; then
-    open *{csv,json} -a "$OUTLOOK"
-else
-    open *{csv,json} -a "$MAIL"
-fi
+#if [ -d "$OUTLOOK" ]; then
+#    open *{csv,json} -a "$OUTLOOK"
+#else
+#    open *{csv,json} -a "$MAIL"
+#fi
 
 echo $SEND_THIS_EMAIL | tr '[:lower:]' '[:upper:]'
 echo $CLOSE_THIS_WINDOW

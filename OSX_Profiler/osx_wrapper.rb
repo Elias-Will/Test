@@ -17,9 +17,9 @@ $c_jira_m = ""
 
 op = OptionParser.new do |opts|
 	opts.banner = "Usage: osx_wrapper.rb [opts]"
-	opts.on('-d', '--default', 'Default parameters') {
-		$default = true
-	}
+	# opts.on('-d', '--default', 'Default parameters') {
+	# 	$default = true
+	# }
 	opts.on('-p', '--protocol pr', 'Protocol') {|pr| 
 		$protocol = pr
 	}
@@ -59,9 +59,9 @@ else
 	`ruby readCSV.rb #{$r_csv_m}`
 
 	puts "### Searing Jira Issue ###"
-	$address = $protocol + $host + $file + "/search"
+	#$address = $protocol + $host + $file + "/search"
 	$s_jira_m += "-u #{$user} "
-	$s_jira_m += "-a #{$address} "
+	#$s_jira_m += "-a #{$address} "
 	#$s_jira_m += "-P #{$project} "
 	#puts `ruby searchJiraOSX.rb -h`
 	#puts $s_jira_m
@@ -74,9 +74,9 @@ else
 	if Dir.glob("*_create.json").any?
 		puts "### Creating Jira Issue ###"
 		#$stdin.gets
-		$address = $protocol + $host + $file + "/issue"
+		#$address = $protocol + $host + $file + "/issue"
 		$c_jira_m += "-u #{$user} "
-		$c_jira_m += "-a #{$address} "
+		#$c_jira_m += "-a #{$address} "
 		#puts `ruby createJira.rb -h`
 		#puts $c_jira_m
 		#print "> "
@@ -91,6 +91,12 @@ else
 		`ruby osx_update.rb #{$c_jira_m}`
 	end
 
+	# files = "*" + "_" + "*" + "_hash.json"
+	# file = Dir.glob("files").first
+	# file = File.read(file)
+	# data = JSON.parse(file)
+	# serial = data["Serial Number"]
+
 end
 
 if ! $keep_files
@@ -104,9 +110,9 @@ if ! $keep_files
 	if Dir.glob("*_update.json").any?
 		`rm *_update.json`
 	end
-	if File.exist?("http_header.txt")
-		`rm http_header.txt`
-	end
+	# if File.exist?("http_header.txt")
+	# 	`rm http_header.txt`
+	# end
 	if File.exist?("search_result.json")
 		`rm search_result.json`
 	end

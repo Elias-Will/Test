@@ -68,6 +68,7 @@ end
 def createPostHash(csv_hash, count)
 	new_hash = {
 			"fields" => {
+				"assignee" => nil,
 				"project" => {
 					"key" => csv_hash["Project Name"] #["Project Name"]
 				},
@@ -97,15 +98,17 @@ def createPostHash(csv_hash, count)
 				"customfield_11018" => {"value" => csv_hash["OS"]},
 				#"customfield_11030" => csv_hash["Internal Storage Replaceable"],
 				"customfield_11106" => csv_hash["Color"],
+				"customfield_11107" => csv_hash["Product Type"],
 				"customfield_11022" => csv_hash["CPU Model"],
 				"customfield_11023" => csv_hash["CPU Speed"].to_f,
 				"customfield_11060" => csv_hash["Display Resolution"],
 				#"customfield_11029" => csv_hash["Internal Storage Capacity"].to_f,
 				"customfield_11056" => csv_hash["MAC Address (Bluetooth)"],
-				"customfield_11054" => csv_hash["MAC Address (WiFi)"],
+				"customfield_11054" => csv_hash["MAC Address (WIFI)"],
 				"customfield_11004" => csv_hash["Model"],
 				"customfield_11019" => csv_hash["OS Version"],
 				"customfield_11002" => csv_hash["Serial Number"],
+				"customfield_11200" => csv_hash["UDID"],
 				"customfield_11201" => csv_hash["IMEI"]
 			}
 		}

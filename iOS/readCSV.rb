@@ -7,6 +7,7 @@ require 'optparse'
 
 $csv_get_all = false
 $custom_file = false
+$count = 0
 
 op = OptionParser.new do |opts|
 	#opts.banner
@@ -18,6 +19,12 @@ op = OptionParser.new do |opts|
 	end
 end
 op.parse!
+
+def write_hash_to_file(file, hash)
+	f_file = File.open(file, "w")
+	f_file.write(hash)
+	f_file.close
+end
 
 def getFile()	
 	file = $stdin.gets.chomp
@@ -39,8 +46,7 @@ def getFile()
 end
 
 def main()
-	!$csv_get_all ? files = getFile() : files = "*.csv"
-	$count = 0
+	!$csv_get_all ? files = getFile() : files = "*.csv"	
 	Dir[files].each do |f|
 		CSV.foreach(f, headers: true) do |row|
 			$count += 1
@@ -49,14 +55,10 @@ def main()
 			asset_hash = JSON.pretty_generate(asset_hash)
 				
 			if $custom_file != false && $custom_file.include?(".json")
-				customfile = File.open($custom_file, "w")
-				customfile.write(asset_hash)
-				customfile.close
+				write_hash_to_file($custom_file, asset_hash)
 			else
 				file_name = $count.to_s + "_" + issuetype + "_hash.json"
-				json_file = File.open(file_name, "w")
-				json_file.write(asset_hash)
-				json_file.close
+				write_hash_to_file(file_name, asset_hash)
 			end
 		end		
 	end

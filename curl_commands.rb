@@ -7,10 +7,15 @@ module CurlCommands
 	$output_file_create = "create_log.txt"
 	$output_file_issue = "current_issue.json"
 	$output_file_update = "update_log.txt"
-	$address = "https://kupferwerk.atlassian.net/rest/api/latest/"
-	$search_address = $address + "search"
-	$create_address = $address + "issue"
+	$def_protocol = "https"
+	$def_host = "kupferwerk.atlassian.net"
+	$def_api = "rest/api/latest/"
+	$def_address = $def_protocol + "://" + $def_host + "/" + $def_api 
+	#$address = "https://kupferwerk.atlassian.net/rest/api/latest/"
+	$search_address = $def_address + "search"
+	$create_address = $def_address + "issue"
 	##########
+
 
 	# 	Returns the search result including the HTTP header, which
 	# 	includes the response of the curl request. The program 

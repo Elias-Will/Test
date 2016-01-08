@@ -29,6 +29,7 @@ module HashFormatter
 	### 	request.
 	def self.delete_blanks(hash)
 		hash["fields"].each do |key, value|
+			next if key == "assignee"
 			hash["fields"].delete(key) if value == nil || value == 0.0
 			if value.respond_to?(:key?) #if true, means customfield has nested hash
 				value.each do |k, v|
@@ -51,6 +52,8 @@ module CompareHashes
 			when "CPU Model"					then return "customfield_11022"
 			when "CPU Speed"					then return "customfield_11023"
 			when "RAM"							then return "customfield_11024"
+			when "RAM Speed"					then return "customfield_11026"
+			when "RAM Speed | Type"				then return "customfield_11026"
 			when "CPU Cores"					then return "customfield_11027"
 			when "Internal Storage Capacity" 	then return "customfield_11029"
 			when "USB Type"						then return "customfield_11037"
@@ -58,12 +61,16 @@ module CompareHashes
 			when "Thunderbolt Type" 			then return "customfield_11040"
 			when "Power Supply (Energy)"		then return "customfield_11042"
 			when "Firewire Ports"				then return "customfield_11044"
+			when "MAC Address (WIFI)"			then return "customfield_11054"
+			when "MAC Address (Bluetooth)"		then return "customfield_11056"
 			when "Graphics Card 1"				then return "customfield_11057"
 			when "Graphics Card 2"				then return "customfield_11058"
 			when "VRAM"							then return "customfield_11059"
 			when "Battery Capacity"				then return "customfield_11061"
-			when "Bluetooth Version"			then return "customfield_11100"
+			when "Bluetooth Version"			then return "customfield_11100"			
 			when "SDK Version"					then return "customfield_11105"
+			when "Product Type"					then return "customfield_11107"
+			when "UDID"							then return "customfield_11200"
 			when "Touch ID"						then return "customfield_11210"
 			else return false
 		end
@@ -127,6 +134,7 @@ module CompareHashes
 		#of the function. Returning nil in case no value is stored adds
 		#some safety.
 		return nil if update_hash["fields"].empty?
+		update_hash["fields"].store("assignee", nil)
 		return update_hash
 	end 	# can't get type of empty cells. updating null-values that are supposed to be
 			# numbers (or options?) not yet possible!

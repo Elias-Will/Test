@@ -36,10 +36,11 @@ def checkHeader()
 	file = File.read($output_file_h)
 	if file.include?("HTTP/1.1 200 OK")
 		return true
+	#no proper case-handling possible when using osx_wrapper
 	elsif file.include?("HTTP/1.1 401 Unauthorized")
-		#puts "Unauthorized User!"
+		
 	elsif file.include?("HTTP/1.1 502 Bad Gateway")
-		#puts "Bad Gateway"
+		
 	else
 		#puts "HTTP Error"
 	end
@@ -69,6 +70,7 @@ end
 def createPostHash(csv_hash, count)
 	new_hash = {
 			"fields" => {
+				"assignee" => nil,
 				"project" => {
 					"key" => csv_hash["Project Name"] #["Project Name"]
 				},
@@ -114,11 +116,10 @@ def createPostHash(csv_hash, count)
 		hash_file.close
 end
 
-def createUpdateHash(key, serial, imei, count)
+def createUpdateHash(key, serial, count)
 	new_hash = {
 		"key" => key,
-		"serial" => serial,
-		"imei" => imei
+		"serial" => serial
 	}
 	new_hash = JSON.pretty_generate(new_hash)
 	update_file = File.open(count.to_s + "_update.json", "w")
@@ -135,14 +136,12 @@ def main()
 		hash_file = File.read(f)
 		hash_file = JSON.parse(hash_file)
 		found_serial = false
-		found_imei = false
 		hash_file.has_key?("Serial Number") ? asset_serial = hash_file["Serial Number"] : asset_serial = nil
-		hash_file.has_key?("IMEI") ? asset_imei = hash_file["IMEI"] : asset_imei = nil
-
 		$jira_project = hash_file["Project Name"]
-		if hash_file.has_key?("Serial Number") && hash_file["Serial Number"] != nil
+		if asset_serial != nil
 			CurlCommands.curlSearch_Header($user, $jira_project, "Serial Number", asset_serial)
-			if state = checkHeader()
+			state = checkHeader()
+			if state
 				CurlCommands.curlSearch($user, $jira_project, "Serial Number", asset_serial)
 				found_serial = checkMatch()
 				if found_serial
@@ -150,25 +149,14 @@ def main()
 					#next
 				end
 			end
-		end
+		end			
 
-		if hash_file.has_key?("IMEI") && hash_file["IMEI"] != nil
-			#curlSearch_Header("IMEI", asset_imei)
-			if state = checkHeader()
-				#curlSearch("IMEI", asset_imei)
-				found_imei = checkMatch()
-				if found_imei
-					key = getKey()
-				end
-			end
-		end		
-
-		if !(found_serial) && !(found_imei)
+		if !(found_serial)
 			if state
 				createPostHash(hash_file, count)
 			end
 		else
-			createUpdateHash(key, asset_serial, asset_imei, count)
+			createUpdateHash(key, asset_serial, count)
 		end
 	end	
 end

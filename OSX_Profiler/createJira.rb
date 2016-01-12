@@ -24,6 +24,6 @@ end
 files = "*_create.json"
 $user = getUser() unless $user != nil
 Dir[files].each do |f|
-	create_hash = File.read(f)	
+	create_hash = File.read(f)
 	CurlCommands.curlCreateIssue($user, create_hash)
 end

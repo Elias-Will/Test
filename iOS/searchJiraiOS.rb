@@ -66,57 +66,11 @@ def getKey()
 end
 
 def createPostHash(csv_hash, count)
-	new_hash = {
-			"fields" => {
-				"assignee" => nil,
-				"project" => {
-					"key" => csv_hash["Project Name"] #["Project Name"]
-				},
-				"summary" => csv_hash["Device Name"], #issue name
-				"description" => csv_hash["IssueType"], #beschreibung
-				"issuetype" => {
-					"name" => csv_hash["IssueType"] #laptop/iphone/ipad....
-				},
-				"customfield_11203" => csv_hash["Manufacturing Year"].to_f,
-				"customfield_11204" => csv_hash["SoC"],
-				"customfield_11024" => csv_hash["RAM"],
-				"customfield_11026" => csv_hash["RAM Speed | Type"],
-				"customfield_11205" => csv_hash["CPU Arch"],
-				"customfield_11027" => csv_hash["CPU Cores"].to_f,
-				"customfield_11206" => csv_hash["GPU"],
-				"customfield_11207" => csv_hash["GPU Cores"].to_f,
-				"customfield_11212" => csv_hash["GPU Speed"].to_f,
-				"customfield_11208" => csv_hash["DPI"].to_f,
-				"customfield_11021" => csv_hash["Display Size"].to_f,
-				"customfield_11209" => csv_hash["Motion Sensor"],
-				"customfield_11103" => csv_hash["Front Camera"],
-				"customfield_11104" => csv_hash["Rear Camera"],
-				"customfield_11061" => csv_hash["Battery Capacity"].to_f,
-				"customfield_11100" => csv_hash["Bluetooth Version"].to_f,
-				"customfield_11210" => csv_hash["Touch ID"],
-				"customfield_11003" => {"value" => csv_hash["manufacturer"]},
-				"customfield_11018" => {"value" => csv_hash["OS"]},
-				#"customfield_11030" => csv_hash["Internal Storage Replaceable"],
-				"customfield_11106" => csv_hash["Color"],
-				"customfield_11107" => csv_hash["Product Type"],
-				"customfield_11022" => csv_hash["CPU Model"],
-				"customfield_11023" => csv_hash["CPU Speed"].to_f,
-				"customfield_11060" => csv_hash["Display Resolution"],
-				#"customfield_11029" => csv_hash["Internal Storage Capacity"].to_f,
-				"customfield_11056" => csv_hash["MAC Address (Bluetooth)"],
-				"customfield_11054" => csv_hash["MAC Address (WIFI)"],
-				"customfield_11004" => csv_hash["Model"],
-				"customfield_11019" => csv_hash["OS Version"],
-				"customfield_11002" => csv_hash["Serial Number"],
-				"customfield_11200" => csv_hash["UDID"],
-				"customfield_11201" => csv_hash["IMEI"]
-			}
-		}
-
+		new_hash = CreateHash.create_ios_header(csv_hash)
+		new_hash = CreateHash.create_post_hash(csv_hash, new_hash)
 		new_hash = HashFormatter.delete_blanks(new_hash)
 		new_hash = JSON.pretty_generate(new_hash)
 		new_hash = HashFormatter.remove_spaces(new_hash)
-
 		hash_file = File.open(count.to_s + "_create.json", "w")
 		hash_file.write(new_hash)
 		hash_file.close

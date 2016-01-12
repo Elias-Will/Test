@@ -68,46 +68,9 @@ def getKey()
 end
 
 def createPostHash(csv_hash, count)
-	new_hash = {
-			"fields" => {
-				"assignee" => nil,
-				"project" => {
-					"key" => csv_hash["Project Name"] #["Project Name"]
-				},
-				"summary" => csv_hash["Model"], #issue name
-				"description" => csv_hash["Model"], #beschreibung
-				"issuetype" => {
-					"name" => csv_hash["IssueType"] #laptop/iphone/ipad....
-				},
-				"customfield_11061" => csv_hash["Battery Capacity"].to_f,
-				"customfield_11003" => {"value" => csv_hash["manufacturer"]},
-				"customfield_11018" => {"value" => csv_hash["OS"]},
-				"customfield_11027" => csv_hash["CPU Cores"].to_f,
-				"customfield_11022" => csv_hash["CPU Model"],
-				"customfield_11023" => csv_hash["CPU Speed"].to_f,
-				"customfield_11060" => csv_hash["Display Resolution"],
-				#{}"customfield_11044" => csv_hash["Firewire Ports"],
-				"customfield_11057" => csv_hash["Graphics Card 1"],
-				"customfield_11058" => csv_hash["Graphics Card 2"],
-				
-				"customfield_11029" => csv_hash["Internal Storage Capacity"].to_f,
-				"customfield_11056" => csv_hash["MAC Address (Bluetooth)"],
-				"customfield_11055" => csv_hash["MAC Address (Ethernet)"],
-				"customfield_11054" => csv_hash["MAC Address (WIFI)"],
-				"customfield_11004" => csv_hash["Model"],
-				"customfield_11038" => csv_hash["Number of Thunderbolt Ports"].to_f,
-				"customfield_11019" => csv_hash["OS Version"],
-				"customfield_11042" => csv_hash["Power Supply (Energy)"].to_f,
-				"customfield_11024" => csv_hash["RAM"],
-				"customfield_11025" => {"value" => csv_hash["RAM Upgradeable"]}, #new
-				"customfield_11026" => csv_hash["RAM Speed"], #new
-				"customfield_11002" => csv_hash["Serial Number"],
-				"customfield_11040" => {"value" => csv_hash["Thunderbolt Type"]},
-				"customfield_11037" => {"value" => csv_hash["USB Type"]},
-				"customfield_11059" => csv_hash["VRAM"].to_f
-			}
-		}
-
+		
+		new_hash = CreateHash.create_osx_header(csv_hash)
+		new_hash = CreateHash.create_post_hash(csv_hash, new_hash)
 		new_hash = HashFormatter.delete_blanks(new_hash)
 		new_hash = JSON.pretty_generate(new_hash)
 		new_hash = HashFormatter.remove_spaces(new_hash)

@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Mon, 11 Jan 2016 11:18:26 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+X-AREQUESTID: 738x17739x1
+X-ASEN: SEN-2427011
+X-Seraph-LoginReason: OUT
+X-Seraph-LoginReason: OK
+X-ASESSIONID: 1o4lbd2
+X-AUSERNAME: elias.will
+X-ATENANT-ID: kupferwerk.atlassian.net
+Cache-Control: no-cache, no-store, no-transform
+X-Content-Type-Options: nosniff
+Set-Cookie: JSESSIONID=2D1AE123D993DD5DCDE5AF5A6876EBDF; Path=/; Secure; HttpOnly
+Set-Cookie: studio.crowd.tokenkey=""; Domain=.kupferwerk.atlassian.net; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly
+Set-Cookie: studio.crowd.tokenkey=49KLPogxvhjPCR600GzT3w00; Domain=.kupferwerk.atlassian.net; Path=/; Secure; HttpOnly
+Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|a33ca1c962ceb536ca39d2a0f542b5aee75f696e|lin; Path=/; Secure
+Strict-Transport-Security: max-age=315360000;includeSubDomains
+
+{"startAt":0,"maxResults":50,"total":0,"issues":[]}

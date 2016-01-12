@@ -54,6 +54,7 @@ module CompareHashes
 			when "RAM"							then return "customfield_11024"
 			when "RAM Speed"					then return "customfield_11026"
 			when "RAM Speed | Type"				then return "customfield_11026"
+			when "RAM Upgradeable"				then return "customfield_11025"
 			when "CPU Cores"					then return "customfield_11027"
 			when "Internal Storage Capacity" 	then return "customfield_11029"
 			when "USB Type"						then return "customfield_11037"
@@ -62,6 +63,7 @@ module CompareHashes
 			when "Power Supply (Energy)"		then return "customfield_11042"
 			when "Firewire Ports"				then return "customfield_11044"
 			when "MAC Address (WIFI)"			then return "customfield_11054"
+			when "MAC Address (Ethernet)"		then return "customfield_11055"
 			when "MAC Address (Bluetooth)"		then return "customfield_11056"
 			when "Graphics Card 1"				then return "customfield_11057"
 			when "Graphics Card 2"				then return "customfield_11058"
@@ -72,6 +74,29 @@ module CompareHashes
 			when "Product Type"					then return "customfield_11107"
 			when "UDID"							then return "customfield_11200"
 			when "Touch ID"						then return "customfield_11210"
+			#when "Device Name"					then return "summary"
+			#when "IssueType"					then return "description"
+			#when "Project Name"					then return "project"
+			when "Manufacturing Year"			then return "customfield_11203"
+			when "SoC"							then return "customfield_11204"
+			when "CPU Arch"						then return "customfield_11205"
+			when "GPU"							then return "customfield_11206"
+			when "GPU Cores"					then return "customfield_11207"
+			when "GPU Speed"					then return "customfield_11212"
+			when "DPI"							then return "customfield_11208"
+			when "Display Size"					then return "customfield_11021"
+			when "Motion Sensor"				then return "customfield_11209"
+			when "Front Camera"					then return "customfield_11103"
+			when "Rear Camera"					then return "customfield_11104"
+			when "manufacturer"					then return "customfield_11003"
+			when "Color"						then return "customfield_11106"
+			when "Product Type"					then return "customfield_11107"
+			when "Display Resolution"			then return "customfield_11060"
+			when "Model"						then return "customfield_11004"
+			when "Serial Number"				then return "customfield_11002"
+			when "UDID"							then return "customfield_11200"
+			when "IMEI"							then return "customfield_11201"
+			when "SDK Version"					then return "customfield_11105"
 			else return false
 		end
 	end
@@ -79,6 +104,7 @@ module CompareHashes
 	### 	Translates the key from new_hash to the matching customfield_type
 	def self.getType(key)
 		case key
+			#when "assignee"						then return "String" #type is "user" but functions like String(?)
 			when "OS" 							then return "Option"
 			when "OS Version"					then return "String"
 			when "CPU Model"					then return "String"
@@ -98,6 +124,35 @@ module CompareHashes
 			when "Bluetooth Version"			then return "Number"
 			when "SDK Version"					then return "String"
 			when "Touch ID"						then return "String"
+			#when "summary"						then return "String"
+			#when "IssueType"					then return "Nested" #"name" instead of "value"
+			when "Manufacturing Year"			then return "Number"
+			when "SoC"							then return "String"
+			when "RAM Speed | Type"				then return "String"
+			when "RAM Speed"					then return "String"
+			when "RAM Upgradeable"				then return "Option"
+			when "CPU Arch"						then return "String"
+			when "GPU"							then return "String"
+			when "GPU Cores"					then return "Number"
+			when "GPU Speed"					then return "Number"
+			when "DPI"							then return "Number"
+			when "Display Size"					then return "Number"
+			when "Motion Sensor"				then return "String"
+			when "Front Camera"					then return "String"
+			when "Rear Camera"					then return "String"
+			when "manufacturer"					then return "Option"
+			when "Color"						then return "String"
+			when "Product Type"					then return "String"
+			when "Display Resolution"			then return "String"
+			when "MAC Address (Bluetooth)"		then return "String"
+			when "MAC Address (Ethernet)"		then return "String"
+			when "MAC Address (WIFI)"			then return "String"
+			when "Model"						then return "String"
+			when "Serial Number"				then return "String"
+			when "UDID"							then return "String"
+			when "IMEI"							then return "String"
+			when "SDK Version"					then return "String"
+			#when "Project Name"					then return "Nested"						
 			else return false
 		end
 	end
@@ -111,17 +166,38 @@ module CompareHashes
 	def self.compare_hashes(new_hash, current_hash)
 		update_hash = {}
 		update_hash.store("fields", {})
+		
+		#Thunderbolt Type sometimes gets saved with trailing space, which leads
+		#to an error when trying to update
+		if new_hash.has_key?("Thunderbolt Type") && new_hash["Thunderbolt Type"] != nil
+			new_hash["Thunderbolt Type"] = new_hash["Thunderbolt Type"].rstrip
+		end
 
 		new_hash.each do |key, value|
 			_ID = getID(key)
 			next if _ID == false #some values can't change (eg MAC Address) and
 				#are not included in the getID function
 
-			if current_hash["fields"][_ID].respond_to?(:key?) || getType(key) == "Option" #if true, means
-												#the current field is an option-type with a nested hash
-				if value != current_hash["fields"][_ID]["value"]
+			# if current_hash["fields"][_ID].respond_to?(:key?) || getType(key) == "Option" #if true, means
+			# 									#the current field is an option-type with a nested hash
+			# 	if value != current_hash["fields"][_ID]["value"]
+			# 		update_hash["fields"].store(_ID, {})
+			# 		update_hash["fields"][_ID].store("value", value)
+			# 	end
+
+			#Empty option types don't have a nested hash, so 'null-check' needs different
+			#comparison
+			if getType(key) == "Option"
+				if current_hash["fields"][_ID] == nil && value != nil
 					update_hash["fields"].store(_ID, {})
 					update_hash["fields"][_ID].store("value", value)
+				elsif current_hash["fields"][_ID].respond_to?(:key?)
+					if value != current_hash["fields"][_ID]["value"]
+						update_hash["fields"].store(_ID, {})
+						update_hash["fields"][_ID].store("value", value)
+					end
+				else
+					next
 				end
 			else				
 				value = value.to_f if current_hash["fields"][_ID].is_a?(Float) || getType(key) == "Number"
@@ -132,12 +208,62 @@ module CompareHashes
 		end
 		#update_hash gets initialized as {"fields => {}"} at the beginning
 		#of the function. Returning nil in case no value is stored adds
-		#some safety.
-		return nil if update_hash["fields"].empty?
-		update_hash["fields"].store("assignee", nil)
+		#some safety.		
+
+		return nil if update_hash["fields"].empty?		
 		return update_hash
 	end 	# can't get type of empty cells. updating null-values that are supposed to be
 			# numbers (or options?) not yet possible!
+
+	
+		
+	
+end
+
+module CreateHash
+
+	def self.create_ios_header(csv_hash)
+		new_hash = {}
+		new_hash.store("fields", {})
+		new_hash["fields"].store("assignee", nil)
+		new_hash["fields"].store("project", {})
+		new_hash["fields"]["project"].store("key", csv_hash["Project Name"])
+		new_hash["fields"].store("summary", csv_hash["Device Name"])
+		new_hash["fields"].store("issuetype", {})
+		new_hash["fields"]["issuetype"].store("name", csv_hash["IssueType"])
+		return new_hash
+	end
+
+	def self.create_osx_header(csv_hash)
+		new_hash = {}
+		new_hash.store("fields", {})
+		new_hash["fields"].store("assignee", nil)
+		new_hash["fields"].store("project", {})
+		new_hash["fields"]["project"].store("key", csv_hash["Project Name"])
+		new_hash["fields"].store("summary", csv_hash["Model"])
+		new_hash["fields"].store("issuetype", {})
+		new_hash["fields"]["issuetype"].store("name", csv_hash["IssueType"])
+		return new_hash
+	end
+
+	def self.create_post_hash(csv_hash, new_hash)	
+
+		csv_hash.each do |key, value|
+			_ID = CompareHashes.getID(key)
+			next if _ID == false
+			_type = CompareHashes.getType(key)
+			next if _type == false
+
+			if _type == "Option"
+				new_hash["fields"].store(_ID, {})
+				new_hash["fields"][_ID].store("value", value)
+			else
+				value = value.to_f if _type == "Number"
+				new_hash["fields"].store(_ID, value)
+			end
+		end
+		return new_hash
+	end
 end
 
 
@@ -147,58 +273,15 @@ end
 
 
 
-=begin
-	def self.compare_hashes(old_hash, new_hash)
-		update_hash = {}
-		update_hash.store("fields", {})
-		old_hash["fields"].each do |key, value|
-			skip = false
-			if value.respond_to?(:key?)
-				value.each do |k, v|				
-					_k = getKeyName(key)
-					next if _k == false
-					new_hash[_k] = new_hash[_k].to_f if v.is_a?(Float)
-					if v != new_hash[_k]
-						update_hash["fields"].store(key, {})
-						update_hash["fields"][key].store("value", new_hash[_k])
-					end					
-					skip = true
-				end
-			end
-			next if skip		
-			_k = getKeyName(key)
-			next if _k == false
-			new_hash[_k] = new_hash[_k].to_f if value.is_a?(Float)
-			if value != new_hash[_k]
-				update_hash["fields"].store(key, new_hash[_k])
-			end
-		end
-		return nil if update_hash["fields"].empty?
-		return update_hash
-	end
 
-	def self.getKeyName(key)
-		case key
-			when "customfield_11018" then return "OS"
-			when "customfield_11027" then return "CPU Cores"
-			when "customfield_11022" then return "CPU Model"
-			when "customfield_11023" then return "CPU Speed"
-			when "customfield_11029" then return "Internal Storage Capacity"
-			when "customfield_11019" then return "OS Version"
-			when "customfield_11024" then return "RAM"
-			when "customfield_11044" then return "Firewire Ports"
-			when "customfield_11057" then return "Graphics Card 1"
-			when "customfield_11058" then return "Graphics Card 2"
-			when "customfield_11038" then return "Number of Thunderbolt Ports"
-			when "customfield_11040" then return "Thunderbolt Type"
-			when "customfield_11037" then return "USB Type"
-			when "customfield_11059" then return "VRAM"
-			when "customfield_11042" then return "Power Supply (Energy)"
-			when "customfield_11061" then return "Battery Capacity"
-			when "customfield_11100" then return "Bluetooth Version"
-			when "customfield_11210" then return "Touch ID"
-			when "customfield_11105" then return "SDK Version"
-			else return false
-		end
-	end
-=end
+
+
+
+
+
+
+
+
+
+
+

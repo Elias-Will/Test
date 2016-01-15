@@ -1,1 +1,0 @@
-{\"fields\":{\"customfield_11018\":{\"value\":\"iOS\"},\"customfield_11056\":\"6c:8d:c1:0a:22:6d\",\"customfield_11208\":326.0}}

@@ -33,6 +33,8 @@ module HashFormatter
 			hash["fields"].delete(key) if value == nil || value == 0.0
 			if value.respond_to?(:key?) #if true, means customfield has nested hash
 				value.each do |k, v|
+					#empty option types usually don't have a nested hash
+					#so this if statement might not be needed
 					hash["fields"].delete(key) if v == nil || v == 0.0
 				end
 			end
@@ -76,7 +78,7 @@ module CompareHashes
 			when "Touch ID"						then return "customfield_11210"
 			#when "Device Name"					then return "summary"
 			#when "IssueType"					then return "description"
-			#when "Project Name"					then return "project"
+			#when "Project Name"				then return "project"
 			when "Manufacturing Year"			then return "customfield_11203"
 			when "SoC"							then return "customfield_11204"
 			when "CPU Arch"						then return "customfield_11205"
@@ -152,47 +154,40 @@ module CompareHashes
 			when "UDID"							then return "String"
 			when "IMEI"							then return "String"
 			when "SDK Version"					then return "String"
-			#when "Project Name"					then return "Nested"						
+			#when "Project Name"				then return "Nested"						
 			else return false
 		end
 	end
 
 
-	### 	Compares a hash (new_hash), created from new hardware data
-	### 	to the latest Jira Issue (current_hash). If the values of
-	### 	a key aren't equal, the new value (from new_hash) gets 
+	### 	Compares a hash (asset_hash), created from new hardware data
+	### 	to the latest Jira Issue (jira_hash). If the values of
+	### 	a key aren't equal, the new value (from asset_hash) gets 
 	### 	stored in a new hash (update_hash) and is later pushed to 
 	### 	Jira as an update.
-	def self.compare_hashes(new_hash, current_hash)
+	def self.compare_hashes(asset_hash, jira_hash)
 		update_hash = {}
 		update_hash.store("fields", {})
 		
 		#Thunderbolt Type sometimes gets saved with trailing space, which leads
 		#to an error when trying to update
-		if new_hash.has_key?("Thunderbolt Type") && new_hash["Thunderbolt Type"] != nil
-			new_hash["Thunderbolt Type"] = new_hash["Thunderbolt Type"].rstrip
+		if asset_hash.has_key?("Thunderbolt Type") && asset_hash["Thunderbolt Type"] != nil
+			asset_hash["Thunderbolt Type"] = asset_hash["Thunderbolt Type"].rstrip
 		end
 
-		new_hash.each do |key, value|
+		asset_hash.each do |key, value|
 			_ID = getID(key)
 			next if _ID == false #some values can't change (eg MAC Address) and
 				#are not included in the getID function
 
-			# if current_hash["fields"][_ID].respond_to?(:key?) || getType(key) == "Option" #if true, means
-			# 									#the current field is an option-type with a nested hash
-			# 	if value != current_hash["fields"][_ID]["value"]
-			# 		update_hash["fields"].store(_ID, {})
-			# 		update_hash["fields"][_ID].store("value", value)
-			# 	end
-
 			#Empty option types don't have a nested hash, so 'null-check' needs different
 			#comparison
 			if getType(key) == "Option"
-				if current_hash["fields"][_ID] == nil && value != nil
+				if jira_hash["fields"][_ID] == nil && value != nil
 					update_hash["fields"].store(_ID, {})
 					update_hash["fields"][_ID].store("value", value)
-				elsif current_hash["fields"][_ID].respond_to?(:key?)
-					if value != current_hash["fields"][_ID]["value"]
+				elsif jira_hash["fields"][_ID].respond_to?(:key?)
+					if value != jira_hash["fields"][_ID]["value"]
 						update_hash["fields"].store(_ID, {})
 						update_hash["fields"][_ID].store("value", value)
 					end
@@ -200,8 +195,8 @@ module CompareHashes
 					next
 				end
 			else				
-				value = value.to_f if current_hash["fields"][_ID].is_a?(Float) || getType(key) == "Number"
-				if value != current_hash["fields"][_ID]
+				value = value.to_f if jira_hash["fields"][_ID].is_a?(Float) || getType(key) == "Number"
+				if value != jira_hash["fields"][_ID]
 					update_hash["fields"].store(_ID, value)
 				end				
 			end
@@ -264,24 +259,26 @@ module CreateHash
 		end
 		return new_hash
 	end
+
+	def self.create_link_hash(key, serial, imei)
+		hash = {
+			"key" => key,
+			"serial" => serial,
+			"imei" => imei
+		}
+		return hash
+	end
+
+	def self.create_hash_file(file_name, hash)
+		hash_file = File.open(file_name, "w")
+		hash_file.write(hash)
+		hash_file.close
+	end
+
+	def self.read_hash_file(file_name)
+		hash_file = File.read(file_name)
+		hash = JSON.parse(hash_file)
+		return hash
+	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

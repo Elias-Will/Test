@@ -1,153 +1,95 @@
 require 'json'
 require 'optparse'
-
-def getDirectory()
-	return Dir.pwd
-end
-
-$user = nil
-$serial_number = nil
-$imei = nil
-$project_key = "TSAM"
-$script_directory = getDirectory()
-$search_address = "https://kupferwerk.atlassian.net/rest/api/latest/search"
-$update_address = "https://kupferwerk.atlassian.net/rest/api/latest/issue/"
-$search_response_file = "i_search_response.json"
-$update_response_file = "i_update_response.json"
-$issue_file = "i_query.json"
+require './asset_management/curl_commands'
+require './asset_management/hash_formatter'
 
 op = OptionParser.new do |opts|
-	opts.on('-p', '--project p', 'Jira Project Key') { |p| $project_key = p }
-	opts.on('-u', '--user u', 'User Name & Password <user.name:Password>') { |u| $user = u }
-	opts.on('-i', '--imei i', 'Input IMEI') { |i| $imei = i }
-	opts.on('-s', '--serial s', 'Input Serial Number (no S pre-fix)') { |s| $serial_number = s }
-	opts.on('-h', '--help', 'Display Help') do
-		puts opts
-		exit
-	end
+	#opts.banner = ""
+	opts.on('-d', '--default', 'Default valus') { 
+		$jira_project = "AM"
+		$asset_directory = "./inventory_json/" }
+	opts.on('-u', '--user user', 'Set Jira User') { |user| $user = user }
+	opts.on('-h', '--help', 'Display Options') { puts opts; exit }
 end
 op.parse!
 
-def getUser()
-	puts "### Enter username <user.name:Password>"
+def set_jira_user()
+	puts "### user.name:password"
 	print "> "
-	user = $stdin.gets.chomp
-	return user
+	$user = $stdin.gets.chomp
 end
 
-def parseJson(file)
-	return false if !file.include?(".json")
-	f_file = File.read(file)
-	f_data = JSON.parse(f_file)
-	return f_data
-end
-
-
-def getNumber()
-	puts "### Enter Serial Number/IMEI"
+def set_jira_project()
+	puts "### Jira Project"
 	print "> "
-	number = $stdin.gets.chomp
-	number.size > 13 ? $imei = number : $serial_number = number
+	$jira_project = $stdin.gets.chomp
 end
 
-def curlSearch(mode, value)
-	puts `curl -u #{$user} -X POST -H "Content-Type: application/json"\
-	 --data '{"jql":"project = #{$project_key} AND \\\"#{mode}\\\" ~ #{value}","fields":["key","Asset Number"]}'\
-	  #{$search_address} | python -m json.tool > #{$search_response_file}`
+def set_asset_directory()
+	puts "### Directory"
+	print "> "
+	$asset_directory = $stdin.gets.chomp
 end
-
-def curlGetIssue(key)
-	puts `curl -u #{$user} #{$update_address}#{key} | python -m json.tool > #{$issue_file}`
-end
-
-def curlUpdate(key, data)
-	puts `curl -D- -u #{$user} -X PUT --data '#{data}' -H "Content-Type: application/json" \
-	#{$update_address}#{key} > #{$update_response_file}`
-end
-
-def getCustomfieldID(type)
 	
-	case type
-	when "Serial Number" then return "customfield_11002"
-	when "IMEI" then return "customfield_11201"
-	else return false
-	end
+def get_jql_input()
+	puts "Enter field(s) and value(s) for jql search!"
+	puts "Example: AND \"Serial Number\" ~ <serial> AND \"Asset Number\" is EMPTY"
+
+	print "> "
+	jql = $stdin.gets.chomp
+	jql = HashFormatter.add_escapes(jql.to_s) #works for String as well
+	return jql
 end
 
-def getIssueKey()
-	f_data = parseJson($search_response_file)
-	return false if !f_data
-	if f_data["total"] == 1
-		return f_data["issues"][0]["key"]
-	else
-		return false
-	end
+def get_jql_search_hash()
+	return CreateHash.read_hash_file($output_file_jql)
 end
 
-def getAssetNumber()
-	f_data = parseJson($issue_file)
-	return false if !f_data
-	f_asset_number = f_data["fields"]["customfield_11009"]
-	if f_asset_number == nil
-		return true
-	else
-		return false
-	end
-end
-
-def getUpdateFile(file, cf_id)
-	f_data = parseJson(file)
-	return false if !f_data
-	if f_data.has_key?(cf_id)
-		if f_data[cf_id] == $serial_number
-			return f_data["customfield_11009"]
-		elsif f_data[cf_id] == $imei
-			return f_data["customfield_11009"]
-		end
-	else
-		return false
-	end
-end
-
-def getUpdateHash(file)
-	f_data = parseJson(file)
-	return false if !f_data
-	return f_data
+def get_jql_search_result()
+	return CurlResponse.check_search_result($output_file_jql)
 end
 
 def main()
-	$user = getUser() unless $user != nil
-	if $serial_number == nil && $imei == nil
-		getNumber()
-	end
 
-	curlSearch("IMEI", $imei) if $imei != nil
-	curlSearch("Serial Number", $serial_number) if $serial_number != nil
-	issue_key = getIssueKey()
-	Kernel.abort("No Issue Found") if !issue_key
-	curlGetIssue(issue_key)
-	asset_number = getAssetNumber()
-	Kernel.abort("Asset Number Problem") if !asset_number
-	if asset_number
-		inventory_directory = $script_directory + "/inventory_json"
-		cf_ID = getCustomfieldID("Serial Number") if $serial_number != nil
-		cf_ID = getCustomfieldID("IMEI") if $imei != nil
-		Kernel.abort("CF_ID error") if !cf_ID
-		asset_found = false
-		Dir[inventory_directory + "/*_match.json"].each do |match|
-			local_asset = getUpdateFile(match, cf_ID)
-			next if !local_asset || local_asset == nil
-			asset_found = true
-		end
-		if asset_found
-			hash_file = inventory_directory + "/" + local_asset + "_curl.json"
-			hash_data = getUpdateHash(hash_file)
-			curlUpdate(issue_key, hash_data)
+	### 	JQL-Search
+	jql_input = get_jql_input()
+	CurlCommand.curl_multiple_issues_jql($user, $jira_project, jql_input)
+	jql_response_amount = CurlResponse.check_search_result($output_file_jql)
+	jql_response_hash = CreateHash.read_hash_file($output_file_jql) unless jql_response_amount == false
+	##################
+
+	puts jql_response_amount if jql_response_amount == false #for debugging
+	Kernel.abort("nothing found") if jql_response_amount == false
+
+	### 	Individual Issues from JQL-Search
+	n = jql_response_amount - 1
+	for i in 0..n
+		key = jql_response_hash["issues"][i]["key"].to_s
+		puts "pulling Jira issue #{key}..."
+		CurlCommand.curl_single_issue_jql($user, key, key + ".json")
+		issue_path = Dir.pwd
+		issue_directory = issue_path + "/" + key + ".json"
+		puts "Jira Issue saved to #{issue_directory}"
+		puts "#######################################", ""
+	end
+	##################
+
+	### 	Read Serial/IMEI
+	files = "AM-*.json"
+	Dir[files].each do |file|
+		issue_hash = CreateHash.read_hash_file(file)
+		issue_type = issue_hash["fields"]["issuetype"]["name"]
+		if issue_type == "iPhone" || issue_type == "Android Phone"
+			puts issue_type
+			puts issue_hash["fields"]["customfield_11002"], issue_hash["fields"]["customfield_11201"]
 		else
-			Kernel.abort("Nothing was updated")
+			puts issue_type
+			puts issue_hash["fields"]["customfield_11002"]
 		end
 	end
-	puts "####### " + key + " was updated!"
 end
 
+set_jira_user() unless $user != nil
+set_jira_project() unless $jira_project != nil
+set_asset_directory() unless $asset_directory != nil
 main()

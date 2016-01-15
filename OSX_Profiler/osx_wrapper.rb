@@ -47,27 +47,27 @@ puts $user
 $curl_jira_m += "-u #{$user} "
 
 if $default
-	`ruby readCSV.rb`
-    `ruby searchJiraOSX.rb #{$curl_jira_m}`
-	`ruby createJira.rb #{$curl_jira_m}`
+	`ruby jira_read_csv.rb`
+    `ruby jira_search_osx.rb #{$curl_jira_m}`
+	#`ruby jira_create_osx.rb #{$curl_jira_m}`
 else
 	puts "### Reading CSV File ###"
-	#puts `ruby readCSV.rb -h`
+	#puts `ruby jira_read_csv.rb -h`
 	#print "> "
 	#$r_csv_m += $stdin.gets.chomp
 	$r_csv_m += "-a "
-	`ruby readCSV.rb #{$r_csv_m}`
+	`ruby jira_read_csv.rb #{$r_csv_m}`
 
 	puts "### Searing Jira Issue ###"
 	#$address = $protocol + $host + $file + "/search"
 	$s_jira_m += "-u #{$user} "
 	#$s_jira_m += "-a #{$address} "
 	#$s_jira_m += "-P #{$project} "
-	#puts `ruby searchJiraOSX.rb -h`
+	#puts `ruby jira_search_osx.rb -h`
 	#puts $s_jira_m
 	#print "> "
 	#$s_jira_m += $stdin.gets.chomp
-	`ruby searchJiraOSX.rb #{$s_jira_m}`
+	`ruby jira_search_osx.rb #{$s_jira_m}`
 
 	
 
@@ -77,18 +77,18 @@ else
 		#$address = $protocol + $host + $file + "/issue"
 		$c_jira_m += "-u #{$user} "
 		#$c_jira_m += "-a #{$address} "
-		#puts `ruby createJira.rb -h`
+		#puts `ruby jira_create_osx.rb -h`
 		#puts $c_jira_m
 		#print "> "
 		#$c_jira_m += $stdin.gets.chomp
-		`ruby createJira.rb #{$c_jira_m}`
+		`ruby jira_create_osx.rb #{$c_jira_m}`
 	end
 
 	if Dir.glob("*_update.json").any?
 		puts "### Checking whether updates are needed ###"
 		#$stdin.gets
 		$c_jira_m += "-u #{$user} "
-		`ruby osx_update.rb #{$c_jira_m}`
+		`ruby jira_update_osx.rb #{$c_jira_m}`
 	end
 
 	# files = "*" + "_" + "*" + "_hash.json"

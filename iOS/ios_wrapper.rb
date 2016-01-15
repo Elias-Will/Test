@@ -47,9 +47,9 @@ puts $user
 $curl_jira_m += "-u #{$user} "
 
 if $default
-	`ruby readCSV.rb`
-    `ruby searchJiraiOS.rb #{$curl_jira_m}`
-	`ruby createJira.rb #{$curl_jira_m}`
+	`ruby jira_read_csv.rb`
+    `ruby jira_search_ios.rb #{$curl_jira_m}`
+	#{}`ruby jira_create_ios.rb #{$curl_jira_m}`
 else
 	# -h -a -e#
 	puts "### Reading CSV File ###"
@@ -57,7 +57,7 @@ else
 	#print "> "
 	#$r_csv_m += $stdin.gets.chomp
 	$r_csv_m += "-a "
-	`ruby readCSV.rb #{$r_csv_m}`
+	`ruby jira_read_csv.rb #{$r_csv_m}`
 
 	puts "### Searing Jira Issue ###"
 	#$address = $protocol + $host + $file + "/search"
@@ -68,7 +68,7 @@ else
 	#puts $s_jira_m
 	#print "> "
 	#$s_jira_m += $stdin.gets.chomp
-	`ruby searchJiraiOS.rb #{$s_jira_m}`
+	`ruby jira_search_ios.rb #{$s_jira_m}`
 
 	if Dir.glob("*_create.json").any?
 		puts "### Creating Jira Issue ###"
@@ -79,13 +79,13 @@ else
 		#puts $c_jira_m
 		#print "> "
 		#$c_jira_m += $stdin.gets.chomp
-		`ruby createJira.rb #{$c_jira_m}`
+		`ruby jira_create_ios.rb #{$c_jira_m}`
 	end
 
 	if Dir.glob("*_update.json").any?
 		puts "### Checking whether updates are needed ###"
 		$c_jira_m += "-u #{$user} "
-		`ruby ios_update.rb #{$c_jira_m}`
+		`ruby jira_update_ios.rb #{$c_jira_m}`
 	end
 end
 

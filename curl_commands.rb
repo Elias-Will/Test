@@ -66,9 +66,9 @@ module CurlCommand
 	# 	Returns Jira Key(s) of multiple issues matching the given conditions (eg Asset Numer is EMPTY)
 	# 	Seems to return a maximum of 50 results.
 	# 	'jql_conditions' has to start with AND/OR/ORDER BY
-	def self.curl_multiple_issues_jql(user, jira_project, jql_conditions)
+	def self.curl_multiple_issues_jql(user, jira_project, jql_conditions, max_results)
 		puts `curl -u #{user} -X POST -H "Content-Type: application/json" --data \
-		'{"jql":"project = #{jira_project} #{jql_conditions}","fields":["key"]}' #{$search_address} \
+		'{"jql":"project = #{jira_project} #{jql_conditions}","maxResults":#{max_results},"fields":["key"]}' #{$search_address} \
 		| python -m json.tool > #{$output_file_jql}`
 	end
 end

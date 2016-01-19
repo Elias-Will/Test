@@ -99,6 +99,11 @@ module CompareHashes
 			when "UDID"							then return "customfield_11200"
 			when "IMEI"							then return "customfield_11201"
 			when "SDK Version"					then return "customfield_11105"
+			when "Asset Number"					then return "customfield_11009"
+			when "Purchase Date"				then return "customfield_11005"
+			when "Purchase Cost"				then return "customfield_11006"
+			when "Supplier"						then return "customfield_11010"
+			when "Order Number"					then return "customfield_11008"
 			else return false
 		end
 	end
@@ -154,6 +159,11 @@ module CompareHashes
 			when "UDID"							then return "String"
 			when "IMEI"							then return "String"
 			when "SDK Version"					then return "String"
+			when "Asset Number"					then return "String"
+			when "Purchase Date"				then return "Date"
+			when "Purchase Cost"				then return "Number"
+			when "Supplier"						then return "String"
+			when "Order Number"					then return "String"
 			#when "Project Name"				then return "Nested"						
 			else return false
 		end
@@ -241,7 +251,16 @@ module CreateHash
 		return new_hash
 	end
 
-	def self.create_post_hash(csv_hash, new_hash)	
+	def self.create_default_post_header()
+		new_hash = {}
+		new_hash.store("fields", {})
+		return new_hash
+	end
+
+	def self.create_post_hash(csv_hash, new_hash)
+		if new_hash == nil
+			new_hash = create_default_post_header()
+		end
 
 		csv_hash.each do |key, value|
 			_ID = CompareHashes.getID(key)

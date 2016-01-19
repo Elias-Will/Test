@@ -43,7 +43,7 @@ def get_jira_issue_key()
 end
 
 def create_post_hash(asset_hash, file_count)
-	post_hash = CreateHash.create_osx_header(asset_hash)
+	post_hash = CreateHash.create_ios_header(asset_hash)
 	post_hash = CreateHash.create_post_hash(asset_hash, post_hash)
 	post_hash = HashFormatter.delete_blanks(post_hash)
 	post_hash = JSON.pretty_generate(post_hash)

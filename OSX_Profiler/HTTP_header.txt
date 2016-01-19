@@ -1,23 +1,23 @@
 HTTP/1.1 200 OK
 Server: nginx
-Date: Thu, 14 Jan 2016 08:46:28 GMT
+Date: Tue, 19 Jan 2016 12:09:53 GMT
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
 Vary: Accept-Encoding
-X-AREQUESTID: 586x120847x1
+X-AREQUESTID: 789x66735x1
 X-ASEN: SEN-2427011
 X-Seraph-LoginReason: OUT
 X-Seraph-LoginReason: OK
-X-ASESSIONID: 103k979
+X-ASESSIONID: 1f1y0vm
 X-AUSERNAME: elias.will
 X-ATENANT-ID: kupferwerk.atlassian.net
 Cache-Control: no-cache, no-store, no-transform
 X-Content-Type-Options: nosniff
-Set-Cookie: JSESSIONID=7BEC8D52BA5E0BDC18608100CD05F894; Path=/; Secure; HttpOnly
+Set-Cookie: JSESSIONID=002AF15B7D1A6A824EBB33629B4C66CE; Path=/; Secure; HttpOnly
 Set-Cookie: studio.crowd.tokenkey=""; Domain=.kupferwerk.atlassian.net; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly
 Set-Cookie: studio.crowd.tokenkey=49KLPogxvhjPCR600GzT3w00; Domain=.kupferwerk.atlassian.net; Path=/; Secure; HttpOnly
-Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|30db0e3f749e9327b7be71be2773ea8ae2f48cdd|lin; Path=/; Secure
+Set-Cookie: atlassian.xsrf.token=BU7P-GBYS-C8BI-BK1D|d178c102aaa3ec3843b40c67a57fd084c5897366|lin; Path=/; Secure
 Strict-Transport-Security: max-age=315360000;includeSubDomains
 
-{"startAt":0,"maxResults":50,"total":0,"issues":[]}
+{"expand":"names,schema","startAt":0,"maxResults":50,"total":1,"issues":[{"expand":"operations,versionedRepresentations,editmeta,changelog,transitions,renderedFields","id":"34401","self":"https://kupferwerk.atlassian.net/rest/api/latest/issue/34401","key":"AM-328"}]}
